@@ -52,8 +52,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' uri      <- "https://bbmc.ouhsc.edu/redcap/api/"
-#' token    <- "06DEFB601F9B46847DAA9DF0CFA951B4"
+#' uri      <- "https://redcap-dev-2.ouhsc.edu/redcap/api/"
+#' token    <- "0BF920AAF9566A8E603F528A498A5729" # dag
 #' result   <- REDCapR::redcap_users_export(redcap_uri=uri, token=token)
 #' result$data_user
 #' result$data_user_form
@@ -90,7 +90,7 @@ redcap_users_export <- function(
     data_access_group             = readr::col_character(),
     data_access_group_id          = readr::col_character(),
     design                        = readr::col_logical(),
-    user_rights                   = readr::col_logical(),
+    user_rights                   = readr::col_integer(),
     data_access_groups            = readr::col_logical(),
     # data_export                   = readr::col_character(), # dropped sometime between 10.5.1 and 12.5.2
     reports                       = readr::col_logical(),
@@ -100,11 +100,13 @@ redcap_users_export <- function(
     data_import_tool              = readr::col_logical(),
     data_comparison_tool          = readr::col_logical(),
     logging                       = readr::col_logical(),
+    email_logging                 = readr::col_logical(), # added 14.6.0
     file_repository               = readr::col_logical(),
     data_quality_create           = readr::col_logical(),
     data_quality_execute          = readr::col_logical(),
     api_export                    = readr::col_logical(),
     api_import                    = readr::col_logical(),
+    api_modules                   = readr::col_logical(), # added 14.6.0 maybe
     mobile_app                    = readr::col_logical(),
     mobile_app_download_data      = readr::col_logical(),
     record_create                 = readr::col_logical(),

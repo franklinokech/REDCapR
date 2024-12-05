@@ -1,3 +1,5 @@
+# REDCapR (development version)
+
 Release History
 ==========================================================
 
@@ -8,10 +10,25 @@ Quick links:
 * [Current & previous GitHub Issues](https://github.com/OuhscBbmc/REDCapR/issues?q=is%3Aissue)
 * [Documentation for current GitHub version](https://ouhscbbmc.github.io/REDCapR/)
 
-Upcoming Changes in v1.2.0
+Version 1.4.x  (Not yet released on CRAN)
 ==========================================================
 
 These features are not yet on CRAN.  Install with `remotes::install_github("OuhscBbmc/REDCapR")`
+
+### New Features
+
+* `redcap_file_repo_list_oneshot()` export a list of files/folders from the file repository (requested by @agdamsbo, #549)
+
+Version 1.3.0  (released 2024-10-22)
+==========================================================
+
+### Minor Enhancements
+
+* Redirection layer for test suite allows you to plug in your own server (#539, #542, #544)
+* Skip a test when checked on CRAN servers (but not on local or GitHub Action machines)
+
+Version 1.2.0  (released 2024-09-08)
+==========================================================
 
 ### Possibly Breaking Change
 
@@ -52,6 +69,8 @@ This will help extract forms from longitudinal & repeating projects.
 
 * `redcap_event_instruments()` now by default returns mappings for all arms.  The previous default was to return the mappings for only the first arm.  To recreate the previous behavior use a call like `REDCapR::redcap_event_instruments(uri, token_2, arms = "1")`.  (Suggested by @januz, #482)
 
+* `redcap_users_export()` used to return a boolean for `user_rights`, but now it can be 0, 1, or 2. (#523)
+
 ### New Features
 
 * New `redcap_metadata_coltypes()` function.  Inspects the fields types and validation text of each field to generate a suggested `readr::col_types` object that reflects the project's current data dictionary.  The object then can be passed to the `col_types` parameter of `redcap_read()` or `redcap_read_oneshot()`.  (Suggested and discussed with @pbchase, @nutterb, @skadauke, & others, #405 & #294)
@@ -70,8 +89,8 @@ This will help extract forms from longitudinal & repeating projects.
 * `read_read_oneshot()`'s parameter `guess_max` now allows floating point values to support `readr::read_csv()` ability to accept a Inf value.  (Suggested by @eveyp, #392)
 * pkgdown pages run & display the examples, but CRAN still doesn't run them. It's illegal to call external resources/APIs from CRAN computers --mostly because they are occasionally unavailable, so the code breaks. (#419)
 * Renamed some functions to follow a consistent pattern.  Old names will be soft-deprecated for a while before being removed. (#416)
-  * `redcap_download_file_oneshot()` to `redcap_file_download_opneshot()`
-  * `redcap_file_upload_oneshot()` to `redcap_file_upload_opneshot()`
+  * `redcap_download_file_oneshot()` to `redcap_file_download_oneshot()`
+  * `redcap_file_upload_oneshot()` to `redcap_file_upload_oneshot()`
   * `redcap_download_instrument()` to `redcap_instrument_download()`
 
 * `redcap_dag_read()` has new `data_access_group_id` field (introduced maybe in [13.1.0](https://redcap.vanderbilt.edu/community/post.php?id=13)) (#459)
@@ -90,6 +109,9 @@ This will help extract forms from longitudinal & repeating projects.
   * `validate_no_logical()`
 * `redcap_read()` checks the `event` parameter and throws an error if a value is not recognized, or the project is not longitudinal (#493)
 * The regex in `regex_named_captures()` is forgiving if there's an unnecessary leading space (@BlairCooper, #495, #501)
+* `redcap_log_read()` assumes all columns are character, except for `timestamp` (#525)
+* `redcap_file_download_oneshot()` no longer asks for the unnecessary parameter for `repeating_instrument` (that the REDCap server ignores).  (@BlairCooper, #506, #530)
+* `redcap_read()` and `redcap_read_oneshot()` accommodate `readr::read_csv()`'s parameter of `na`.  (Suggested by @rmtrane in #529)
 
 Version 1.1.0 (released 2022-08-10)
 ==========================================================
@@ -149,6 +171,7 @@ The package has been stable for years and should be reflected in the major versi
 
 * Accepts more than one `config_option` element.  (Proposed by @BastienRance, #307)
 * Fixed calculation of `success` value returned by `redcap_read()` and `redcap_write()` when the parameter `continue_on_error` is true.  (Bug found by @llrs, #317)
+* [`redcap_survey_link_export_oneshot()`](https://ouhscbbmc.github.io/REDCapR/reference/redcap_survey_link_export_oneshot.html) documentation corrected & improved (@jrob95, #526)
 
 Version 0.11.0 (Released 2020-04-20)
 ==========================================================
@@ -167,7 +190,7 @@ Version 0.11.0 (Released 2020-04-20)
 
 * [`redcap_metadata_write()`](https://ouhscbbmc.github.io/REDCapR/reference/redcap_metadata_write.html) writes to the project's metadata. (#274, @felixetorres)
 
-* [`redcap_survey_link_export_oneshot()`](https://ouhscbbmc.github.io/REDCapR/reference/redcap_survey_link_export_oneshot.html) retrieves the URL to a specific record's survey (*e.g.*, "https://bbmc.ouhsc.edu/redcap/surveys/?s=8KuzSLMHf6") (#293)
+* [`redcap_survey_link_export_oneshot()`](https://ouhscbbmc.github.io/REDCapR/reference/redcap_survey_link_export_oneshot.html) retrieves the URL to a specific record's survey (*e.g.*, "https://redcap-dev-2.ouhsc.edu/redcap/surveys/?s=8KuzSLMHf6") (#293)
 
 * `convert_logical_to_integer` is a new parameter for [`redcap_write()`](https://ouhscbbmc.github.io/REDCapR/reference/redcap_write.html) and [`redcap_write_oneshot()`](https://ouhscbbmc.github.io/REDCapR/reference/redcap_write_oneshot.html). If `TRUE`, all [base::logical] columns in `ds` are cast to an integer before uploading to REDCap.  Boolean values are typically represented as 0/1 in REDCap radio buttons.  Defaults to `FALSE` to maintain backwards compatibility. (#305)
 

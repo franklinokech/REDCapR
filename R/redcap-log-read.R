@@ -71,8 +71,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' uri          <- "https://bbmc.ouhsc.edu/redcap/api/"
-#' token        <- "9A81268476645C4E5F03428B8AC3AA7B"
+#' uri          <- "https://redcap-dev-2.ouhsc.edu/redcap/api/"
+#' token        <- "9A068C425B1341D69E83064A2D273A70"
 #'
 #' ds_last_week <- REDCapR::redcap_log_read(redcap_uri=uri, token=token)$data
 #' head(ds_last_week)
@@ -81,21 +81,21 @@
 #'   REDCapR::redcap_log_read(
 #'     redcap_uri     = uri,
 #'     token          = token,
-#'     log_begin_date = as.Date("2020-08-10"),
-#'     log_end_date   = as.Date("2020-08-10")
+#'     log_begin_date = as.Date("2024-10-11"),
+#'     log_end_date   = as.Date("2024-10-11")
 #'   )$data
 #' head(ds_one_day)
 #'
-#' ds_one_day_single_record_single_user <-
+#' ds_one_day_single_record <-
 #'   REDCapR::redcap_log_read(
 #'     redcap_uri     = uri,
 #'     token          = token,
-#'     log_begin_date = as.Date("2021-07-11"),
-#'     log_end_date   = as.Date("2021-07-11"),
+#'     log_begin_date = as.Date("2024-10-10"),
+#'     log_end_date   = as.Date("2024-10-10"),
 #'     record         = as.character(3),
-#'     user           = "unittestphifree"
+#'     # user           = "unittestphifree"
 #'   )$data
-#' head(ds_one_day_single_record_single_user)
+#' head(ds_one_day_single_record)
 #' }
 
 #' @export
@@ -139,6 +139,11 @@ redcap_log_read <- function(
     user                    = user
   )
 
+  col_types <- readr::cols(
+    timestamp   = readr::col_datetime(),
+    .default    = readr::col_character()
+  )
+
   # This is the important call that communicates with the REDCap server.
   kernel <- kernel_api(
     redcap_uri      = redcap_uri,
@@ -155,6 +160,7 @@ redcap_log_read <- function(
         readr::read_csv(
           file            = I(kernel$raw_text),
           locale          = locale,
+          col_types       = col_types,
           show_col_types  = FALSE
         ),
 

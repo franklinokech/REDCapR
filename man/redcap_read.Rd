@@ -25,6 +25,7 @@ redcap_read(
   datetime_range_end = as.POSIXct(NA),
   blank_for_gray_form_status = FALSE,
   col_types = NULL,
+  na = c("", "NA"),
   guess_type = TRUE,
   guess_max = NULL,
   http_response_encoding = "UTF-8",
@@ -116,6 +117,9 @@ REDCap project. Default is \code{FALSE}.}
 
 \item{col_types}{A \code{\link[readr:cols]{readr::cols()}} object passed internally to
 \code{\link[readr:read_delim]{readr::read_csv()}}.  Optional.}
+
+\item{na}{A \link{character} vector passed internally to \code{\link[readr:read_delim]{readr::read_csv()}}.
+Defaults to \code{c("", "NA")}.}
 
 \item{guess_type}{A boolean value indicating if all columns should be
 returned as character.  If true, \code{\link[readr:read_delim]{readr::read_csv()}} guesses the intended
@@ -278,8 +282,8 @@ check for invalid event values, and will not throw errors.
 
 \examples{
 \dontrun{
-uri     <- "https://bbmc.ouhsc.edu/redcap/api/"
-token   <- "9A81268476645C4E5F03428B8AC3AA7B"
+uri     <- "https://redcap-dev-2.ouhsc.edu/redcap/api/"
+token   <- "9A068C425B1341D69E83064A2D273A70"
 
 # Return the entire dataset
 REDCapR::redcap_read(batch_size=2, redcap_uri=uri, token=token)$data

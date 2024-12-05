@@ -115,8 +115,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' uri      <- "https://bbmc.ouhsc.edu/redcap/api/"
-#' token    <- "9A81268476645C4E5F03428B8AC3AA7B"
+#' uri      <- "https://redcap-dev-2.ouhsc.edu/redcap/api/"
+#' token    <- "9A068C425B1341D69E83064A2D273A70"
 #'
 #' # Return all records and all variables.
 #' ds <- REDCapR:::redcap_read_oneshot_eav(redcap_uri=uri, token=token)$data
@@ -328,7 +328,12 @@ redcap_read_oneshot_eav <- function(
           ) %>%
           dplyr::full_join(ds_possible_checkbox_rows, by=c("record", "field_name", "field_type", "event_id")) %>%
           dplyr::mutate(
-            value      = dplyr::if_else(!is.na(.data$field_type) & (.data$field_type == "checkbox"), as.character(!is.na(.data$value)), .data$value)
+            value =
+              dplyr::if_else(
+                !is.na(.data$field_type) & (.data$field_type == "checkbox"),
+                as.character(!is.na(.data$value)),
+                as.character(.data$value)
+              )
           )
 
         . <- NULL # For the sake of avoiding an R CMD check note.

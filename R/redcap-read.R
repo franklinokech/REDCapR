@@ -73,6 +73,8 @@
 #' REDCap project. Default is `FALSE`.
 #' @param col_types A [readr::cols()] object passed internally to
 #' [readr::read_csv()].  Optional.
+#' @param na A [character] vector passed internally to [readr::read_csv()].
+#' Defaults to `c("", "NA")`.
 #' @param guess_type A boolean value indicating if all columns should be
 #' returned as character.  If true, [readr::read_csv()] guesses the intended
 #' data type for each column.  Ignored if `col_types` is not null.
@@ -217,8 +219,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' uri     <- "https://bbmc.ouhsc.edu/redcap/api/"
-#' token   <- "9A81268476645C4E5F03428B8AC3AA7B"
+#' uri     <- "https://redcap-dev-2.ouhsc.edu/redcap/api/"
+#' token   <- "9A068C425B1341D69E83064A2D273A70"
 #'
 #' # Return the entire dataset
 #' REDCapR::redcap_read(batch_size=2, redcap_uri=uri, token=token)$data
@@ -265,6 +267,7 @@ redcap_read <- function(
   blank_for_gray_form_status    = FALSE,
 
   col_types                     = NULL,
+  na                            = c("", "NA"),
   guess_type                    = TRUE,
   guess_max                     = NULL, # Deprecated parameter
   http_response_encoding        = "UTF-8",
@@ -294,6 +297,7 @@ redcap_read <- function(
   checkmate::assert_posixct(  datetime_range_end        , any.missing=TRUE , len=1, null.ok=TRUE)
   checkmate::assert_logical( blank_for_gray_form_status , any.missing=FALSE, len=1)
 
+  checkmate::assert_character(na                        , any.missing=FALSE)
   checkmate::assert_logical(  guess_type                , any.missing=FALSE,     len=1)
   if (!is.null(guess_max)) warning("The `guess_max` parameter in `REDCapR::redcap_read()` is deprecated.")
 
@@ -324,7 +328,7 @@ redcap_read <- function(
   if (!is.null(events)) {
     if (!metadata$longitudinal) {
       "This project is NOT longitudinal, so do not pass a value to the `event` argument." %>%
-       stop(call. = FALSE)
+        stop(call. = FALSE)
     } else {
       events_in_project <-
         redcap_event_read(
@@ -468,6 +472,7 @@ redcap_read <- function(
       datetime_range_end          = datetime_range_end,
       blank_for_gray_form_status  = blank_for_gray_form_status,
 
+      na                          = na,
       col_types                   = col_types,
       guess_type                  = FALSE,
       # guess_max                 # Not used, because guess_type is FALSE
